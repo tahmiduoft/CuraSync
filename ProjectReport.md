@@ -1,11 +1,11 @@
-# VitalSync – Project Report  
+# CuraSync – Project Report  
 *For iOS & Android*
 
 ---
 
 ## 1  Executive Summary  
 
-Community-health workers (CHWs) in low-connectivity regions need to record patient data offline, receive preliminary guidance, and share information with clinicians once a signal appears. **VitalSync** delivers a cross-platform React Native app plus a FastAPI backend that together provide:
+Community-health workers (CHWs) in low-connectivity regions need to record patient data offline, receive preliminary guidance, and share information with clinicians once a signal appears. **CuraSync** delivers a cross-platform React Native app plus a FastAPI backend that together provide:
 
 | Capability                | Delivered Value                                                                                          |
 |---------------------------|-----------------------------------------------------------------------------------------------------------|
@@ -79,7 +79,7 @@ A future web dashboard can be added with minimal changes, but the MVP already of
 
 ### 4.1 Capture & Queue  
 
-1. CHW opens VitalSync offline.  
+1. CHW opens CuraSync offline.  
 2. Completes visit form → data + media AES-encrypted into SQLite queue.  
 3. Optionally taps **Get Advice** (online only): Infermedica returns probable conditions and self-care tips with a disclaimer.  
 
@@ -229,13 +229,13 @@ CREATE TABLE stats_daily (
 
 ## 12  Conclusion  
 
-VitalSync demonstrates how carefully-chosen, production-ready open-source tools—**React Native**, **FastAPI**, **Supabase**, and **pre-trained AI APIs**—can be combined to deliver a fully offline-capable, data-driven telehealth solution. The project emphasises:
+CuraSync demonstrates how carefully-chosen, production-ready open-source tools—**React Native**, **FastAPI**, **Supabase**, and **pre-trained AI APIs**—can be combined to deliver a fully offline-capable, data-driven telehealth solution. The project emphasises:
 
 1. **Field practicality**: Works with or without network, on affordable Android or iOS devices.  
 2. **Evidence-based insights**: In-app analytics give CHWs and supervisors immediate situational awareness.  
 3. **Scalability & extensibility**: The architecture supports future web dashboards, on-device ML, or additional health modules without a major rewrite.  
 4. **Security & compliance**: Encryption, JWT, and Supabase RLS form a solid baseline for protecting sensitive health data.
 
-By equipping frontline workers with reliable tools and actionable information, VitalSync advances patient outcomes and supports Sustainable Development Goals focused on good health, resilient infrastructure, and clean water/sanitation interventions.
+By equipping frontline workers with reliable tools and actionable information, CuraSync advances patient outcomes and supports Sustainable Development Goals focused on good health, resilient infrastructure, and clean water/sanitation interventions.
 ---
 
