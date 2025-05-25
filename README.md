@@ -27,7 +27,7 @@ A cross-platform (iOS & Android) **React Native** application that lets communit
 | Charts & maps        | Victory Native, react-native-svg, Mapbox GL                |
 | Networking           | Axios with retry & JWT interceptor                            |
 | Authentication       | Supabase Auth (@supabase/supabase-js)                       |
-| Backend API          | FastAPI (Python 3.12)                                         |
+| Backend API          | FastAPI (Python 3.13)                                         |
 | Queue & jobs         | Celery 5 + Redis                                              |
 | Database & storage   | Supabase Postgres, Supabase Storage                           |
 | Analytics            | Pandas, Statsmodels, Prophet, Plotly (server-side PNG/SVG)    |
