@@ -1,175 +1,163 @@
-# TeleCare Lite
+# VitalSync
 
-## 1. Overview
-
-**TeleCare Lite** is an offline-first, cross-platform (iOS & Android) mobile application designed to empower community health workers (CHWs) in low-connectivity areas. The application enables health workers to:
-
-- Capture patient data (symptoms, vitals, photos, audio) entirely offline.
-- Sync data securely to a FastAPI backend with Supabase integration once connectivity returns.
-- Receive AI-generated symptom advice using pre-trained APIs (Infermedica, Google Vision, Google Speech-to-Text).
-- Provide clinicians and NGOs with automated analytics, trend detection, and alerts.
-
-The system is built with **Flutter** for the mobile app, **FastAPI** for backend services, and **Supabase** for authentication, storage, and database management.
+A cross-platform (iOS & Android) **React Native** application that lets community-health workers (CHWs) collect patient data completely offline, receive AI-powered symptom advice, and view interactive analytics in-app. A FastAPI + Supabase backend handles syncing, AI enrichment, statistical analysis, and automated alert e-mails.
 
 ---
 
-## 2. Project Structure
+## 1. Key Features
+
+| Category             | Highlights                                                                                                    |
+|----------------------|----------------------------------------------------------------------------------------------------------------|
+| **Offline workflow** | Encrypted SQLite queue stores visits, photos, and audio when no signal is available.                          |
+| **Background sync**  | react-native-background-fetch uploads queued items via presigned Supabase URLs once connectivity returns.    |
+| **AI advice**        | Pre-trained APIs (Infermedica, Google Vision, Google Speech-to-Text). *No model training required.*            |
+| **In-app analytics** | Descriptive stats, line-trend charts, heat-maps, and Prophet forecasts rendered with Victory Native + SVG.     |
+| **Automated alerts** | Nightly Pandas job detects z-score spikes and e-mails a PDF brief to supervisors.                              |
+| **Security**         | SQLCipher on device, JWT auth, HTTPS/TLS 1.3, Supabase Row-Level Security (RLS).                               |
+
+---
+
+## 2. Tech Stack
+
+| Layer / Purpose      | Technology / Library                                          |
+|----------------------|---------------------------------------------------------------|
+| Mobile framework     | React Native 0.73 (TypeScript)                                |
+| Local database       | react-native-sqlite-storage + SQLCipher                     |
+| Background tasks     | react-native-background-fetch, react-native-upload        |
+| Charts & maps        | Victory Native, react-native-svg, Mapbox GL                |
+| Networking           | Axios with retry & JWT interceptor                            |
+| Authentication       | Supabase Auth (@supabase/supabase-js)                       |
+| Backend API          | FastAPI (Python 3.12)                                         |
+| Queue & jobs         | Celery 5 + Redis                                              |
+| Database & storage   | Supabase Postgres, Supabase Storage                           |
+| Analytics            | Pandas, Statsmodels, Prophet, Plotly (server-side PNG/SVG)    |
+| AI APIs              | Infermedica, Google Vision, Google Speech-to-Text             |
+| Email & PDF          | SendGrid, WeasyPrint                                          |
+| CI/CD                | GitHub Actions (API) · Codemagic (mobile builds)              |
+| Deployment (API)     | Fly.io                                                        |
+
+---
+
+## 3. 📁 Project Structure
+
 ```
-telecare-lite/
-├── mobile-app/       # Flutter app (iOS & Android)
-├── backend/          # FastAPI + Celery backend
-├── supabase/         # Database migrations, policies
-├── .github/          # GitHub Actions workflows
-└── docs/             # Optional documentation (e.g., architecture diagrams)
+vitalsync/
+├── mobile-app/                 # React Native codebase
+│   ├── app/
+│   │   ├── screens/
+│   │   │   ├── VisitForm.jsx
+│   │   │   └── AnalyticsScreen.jsx
+│   │   ├── services/
+│   │   │   ├── syncService.ts
+│   │   │   └── aiService.ts
+│   │   ├── db/schema.sql
+│   │   └── assets/
+│   └── ...
+├── backend/
+│   ├── app/
+│   │   ├── main.py
+│   │   ├── routers/
+│   │   ├── tasks/
+│   │   └── models.py
+│   ├── requirements.txt
+│   └── Dockerfile
+├── supabase/                   # SQL migrations & RLS policies
+└── .github/                    # CI pipelines
 ```
 
 ---
 
-## 3. Core Functionalities and Architecture
+## 4. Setup
 
-### 3.1 Visit Capture and Offline Storage
-- **File**: `mobile-app/lib/screens/visit_form.dart`
-- **Purpose**: Capture patient data (name, age, sex, symptoms, vitals, photos, audio) offline.
-- **Details**: 
-  - Uses **sqflite** with **SQLCipher** for encrypted local storage.
-  - Data saved to an "outbox" queue in SQLite.
-  - Form input validation included.
+### 4.1 Backend
 
-### 3.2 Background Sync Service
-- **File**: `mobile-app/lib/services/sync_service.dart`
-- **Purpose**: Syncs queued data when network becomes available.
-- **Details**:
-  - `background_fetch` plugin for background tasks.
-  - `dio` client for HTTP requests with retries.
-  - Uploads media via presigned URLs to Supabase.
-  - Posts visit data to `/api/visits`.
-
-### 3.3 Backend API
-- **File**: `backend/app/main.py`, `backend/app/routers/visits.py`
-- **Purpose**: REST API for visit data, media uploads, and stats retrieval.
-- **Details**:
-  - FastAPI with Pydantic models.
-  - JWT authentication via Supabase.
-  - Supabase Storage for media files.
-
-### 3.4 AI-Powered Analysis
-- **File**: `backend/app/tasks/ai_tasks.py`
-- **Purpose**: Enhance visit records with AI-generated advice and media analysis.
-- **Details**:
-  - Celery workers call Infermedica, Google Vision, and Speech-to-Text APIs.
-  - Results stored in `visits.ai_jsonb`.
-
-### 3.5 Analytics and Alerts
-- **File**: `backend/app/tasks/stats.py`
-- **Purpose**: Nightly analysis and alert emails.
-- **Details**:
-  - Aggregates data with Pandas.
-  - Calculates z-scores for trend detection.
-  - Sends alerts via email with Matplotlib-generated charts.
-
-### 3.6 Authentication and Security
-- **File**: `mobile-app/lib/services/auth_service.dart`
-- **Purpose**: Secure user authentication and token management.
-- **Security**:
-  - Encrypted local data.
-  - JWTs for API calls.
-  - Supabase RLS policies.
-
----
-
-## 4. Setup Instructions
-
-### 4.1 Prerequisites
-- Flutter 3.x
-- Python 3.11+
-- Supabase account
-- Redis for Celery
-- Docker (optional for backend)
-- Xcode for iOS, Android Studio for Android
-
-### 4.2 Backend Setup
-```
-cd telecare-lite/backend
-python3 -m venv venv
-source venv/bin/activate
+```bash
+cd vitalsync/backend
+python -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env  # Edit with keys
-redis-server          # Start if needed
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
-celery -A app.tasks.ai_tasks worker --loglevel=info
-celery -A app.tasks.stats beat --loglevel=info
+cp .env.example .env      # add your keys
+redis-server &            # or Docker Redis
+uvicorn app.main:app --reload --port 8000 &
+celery -A app.tasks.ai_tasks worker --loglevel=info &
+celery -A app.tasks.stats beat --loglevel=info &
 ```
 
-### 4.3 Mobile App Setup
-```
-cd telecare-lite/mobile-app
-flutter pub get
-flutter run -d ios        # iOS Simulator (Mac)
-flutter run -d android    # Android Emulator
-flutter build apk         # Android release
-flutter build ios         # iOS release (requires Xcode)
+### 4.2 Mobile App
+
+```bash
+cd vitalsync/mobile-app
+yarn install
+npx pod-install            # iOS only
+yarn ios       # or:  yarn android
 ```
 
-### 4.4 Supabase Setup
-- Create a project at [Supabase](https://app.supabase.com)
-- Configure tables `patients`, `visits`, `stats_daily` (use `supabase/seed.sql`)
-- Apply RLS policies (`supabase/policies.sql`)
-- Create a `media` bucket for uploads
-- Obtain your Supabase URL, anon key, and service key
+Add Supabase URL and anon key in `app/env.ts`.
 
-### 4.5 Environment Variables (`backend/.env`)
-```
-SUPABASE_URL=your_supabase_project_url
-SUPABASE_SERVICE_KEY=your_service_key
-JWT_SECRET=your_jwt_secret
+### 4.3 Supabase Init
+
+1. Create project at https://app.supabase.com
+2. Run SQL in `supabase/seed.sql`; enable RLS with `supabase/policies.sql`
+3. Create private media bucket for uploads
+4. Copy project URL, anon key, service key into `.env` and `env.ts`
+
+---
+
+## 5. Usage Flow
+
+1. Launch app offline → fill Visit Form → tap **Save**.
+2. When back online, background sync auto-uploads (or tap **Sync Now**).
+3. Open **Analytics** tab:
+   - Descriptive cards (totals, averages)
+   - Trend line for fever %
+   - Heat-map for symptom clusters (if GPS data exists)
+   - Forecast card (next 7-day projection)
+   - Red banner if z-score alert triggered
+4. Supervisors receive daily PDF e-mail with charts & KPIs.
+
+---
+
+## 6. Environment Variables
+
+Create `backend/.env`:
+
+```ini
+SUPABASE_URL=...
+SUPABASE_SERVICE_KEY=...
+JWT_SECRET=...
 REDIS_URL=redis://localhost:6379
-INFERMEDICA_APP_ID=your_infermedica_id
-INFERMEDICA_APP_KEY=your_infermedica_key
-GOOGLE_CLOUD_VISION_KEY=your_google_vision_api_key
-SENDGRID_API_KEY=your_sendgrid_api_key
-EMAIL_FROM=alerts@telecarelite.com
-EMAIL_TO=admin@telecarelite.com
+INFERMEDICA_APP_ID=...
+INFERMEDICA_APP_KEY=...
+GOOGLE_CLOUD_VISION_KEY=...
+SENDGRID_API_KEY=...
+EMAIL_FROM=alerts@vitalsync.app
+EMAIL_TO=admin@vitalsync.app
 ```
 
 ---
 
-## 5. Testing and CI
-```
-# Backend tests
-cd backend
-pytest
+## 7. Security Notes
 
-# Flutter tests
-cd ../mobile-app
-flutter test
-
-# Flutter linting
-flutter analyze
-```
-CI/CD configured in `.github/workflows/`.
+- SQLCipher encrypts on-device DB; biometric lock optional.
+- JWT stored in Keychain / Keystore via `react-native-keychain`.
+- TLS 1.3 with certificate pinning (Axios).
+- Only minimal, de-identified fields sent to AI APIs.
 
 ---
 
-## 6. Deployment
-- **Backend**: Deploy via Fly.io, Render, Railway, or Docker.
-- **Mobile App**: Use Codemagic/Bitrise for automated builds.
-- **Prepare for App Store Connect and Google Play submission.**
+## 🤝 Contributing
+
+1. Fork → branch (`feat/my-feature`) → commit.
+2. Run `yarn test` (mobile) and `pytest` (backend) before PR.
+3. Submit pull request; CI must pass.
 
 ---
 
-## 7. Security Considerations
-- Use `.env` for sensitive keys (do not commit them).
-- Properly configure iOS and Android permissions.
-- Enforce Supabase RLS policies.
-- AI-generated advice is guidance only, not a medical diagnosis.
+## 📄 License
+
+MIT — see [LICENSE](LICENSE).
 
 ---
 
-## 8. Contributing
-Contributions are welcome. Fork the repository, create a feature branch, and submit a pull request. Report issues via GitHub. A `CONTRIBUTING.md` will be added soon.
+## ⚠️ Disclaimer
 
----
-
-## 9. Legal Disclaimer
-TeleCare Lite is not a licensed medical device. It provides AI-generated health insights for educational purposes. Always consult a licensed healthcare provider for medical decisions.
-
+VitalSync provides AI-generated health insights. It is **not** a licensed medical device and does not replace professional medical advice. Always consult qualified clinicians.
