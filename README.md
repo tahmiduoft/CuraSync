@@ -1,4 +1,4 @@
-# VitalSync
+# CuraSync
 
 A cross-platform (iOS & Android) **React Native** application that lets community-health workers (CHWs) collect patient data completely offline, receive AI-powered symptom advice, and view interactive analytics in-app. A FastAPI + Supabase backend handles syncing, AI enrichment, statistical analysis, and automated alert e-mails.
 
@@ -41,7 +41,7 @@ A cross-platform (iOS & Android) **React Native** application that lets communit
 ## 3. 📁 Project Structure
 
 ```
-vitalsync/
+CuraSync/
 ├── mobile-app/                 # React Native codebase
 │   ├── app/
 │   │   ├── screens/
@@ -72,7 +72,7 @@ vitalsync/
 ### 4.1 Backend
 
 ```bash
-cd vitalsync/backend
+cd CuraSync/backend
 python -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env      # add your keys
@@ -85,7 +85,7 @@ celery -A app.tasks.stats beat --loglevel=info &
 ### 4.2 Mobile App
 
 ```bash
-cd vitalsync/mobile-app
+cd CuraSync/mobile-app
 yarn install
 npx pod-install            # iOS only
 yarn ios       # or:  yarn android
@@ -129,8 +129,8 @@ INFERMEDICA_APP_ID=...
 INFERMEDICA_APP_KEY=...
 GOOGLE_CLOUD_VISION_KEY=...
 SENDGRID_API_KEY=...
-EMAIL_FROM=alerts@vitalsync.app
-EMAIL_TO=admin@vitalsync.app
+EMAIL_FROM=alerts@CuraSync.app
+EMAIL_TO=admin@CuraSync.app
 ```
 
 ---
@@ -160,4 +160,4 @@ MIT — see [LICENSE](LICENSE).
 
 ## ⚠️ Disclaimer
 
-VitalSync provides AI-generated health insights. It is **not** a licensed medical device and does not replace professional medical advice. Always consult qualified clinicians.
+CuraSync provides AI-generated health insights. It is **not** a licensed medical device and does not replace professional medical advice. Always consult qualified clinicians.
