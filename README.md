@@ -46,9 +46,9 @@ vitalsync/
 ├── DEVLOG.md
 ├── BUGLOG.md
 ├── .gitignore
-├── .env                        # (never commit secrets!)
+├── .env                       
 
-├── mobile-app/                 # React Native iOS + Android project
+├── mobile-app/                
 │   ├── package.json
 │   ├── tsconfig.json
 │   ├── metro.config.js
