@@ -41,28 +41,100 @@ A cross-platform (iOS & Android) **React Native** application that lets communit
 ## 3. 📁 Project Structure
 
 ```
-CuraSync/
-├── mobile-app/                 # React Native codebase
-│   ├── app/
+vitalsync/
+├── README.md
+├── DEVLOG.md
+├── BUGLOG.md
+├── .gitignore
+├── .env                        # (never commit secrets!)
+
+├── mobile-app/                 # React Native iOS + Android project
+│   ├── package.json
+│   ├── tsconfig.json
+│   ├── metro.config.js
+│   ├── babel.config.js
+│   ├── android/
+│   │   └── app/
+│   │       └── src/main/
+│   │           ├── AndroidManifest.xml
+│   │           └── java/... (MainActivity.java / MainApplication.java)
+│   ├── ios/
+│   │   ├── VitalSync.xcodeproj/
+│   │   ├── VitalSync.xcworkspace/
+│   │   └── VitalSync/Info.plist
+│   ├── app/                    # source-code root
+│   │   ├── App.tsx
+│   │   ├── navigation/
+│   │   │   └── RootNavigator.tsx
 │   │   ├── screens/
-│   │   │   ├── VisitForm.jsx
-│   │   │   └── AnalyticsScreen.jsx
+│   │   │   ├── VisitForm.tsx
+│   │   │   ├── AnalyticsScreen.tsx
+│   │   │   └── SyncStatus.tsx
 │   │   ├── services/
+│   │   │   ├── authService.ts
+│   │   │   ├── dbService.ts
 │   │   │   ├── syncService.ts
 │   │   │   └── aiService.ts
-│   │   ├── db/schema.sql
+│   │   ├── database/
+│   │   │   ├── schema.sql      # initial SQLCipher schema
+│   │   │   └── migrations/
+│   │   ├── models/
+│   │   │   ├── Patient.ts
+│   │   │   └── Visit.ts
+│   │   ├── components/
+│   │   │   └── CustomInput.tsx
+│   │   ├── utils/
+│   │   │   ├── constants.ts
+│   │   │   └── validators.ts
 │   │   └── assets/
-│   └── ...
-├── backend/
-│   ├── app/
-│   │   ├── main.py
-│   │   ├── routers/
-│   │   ├── tasks/
-│   │   └── models.py
+│   │       ├── images/
+│   │       └── localization/
+│   └── __tests__/
+│       ├── VisitForm.test.tsx
+│       └── syncService.test.ts
+
+├── backend/                    # FastAPI + Celery backend
+│   ├── Dockerfile
 │   ├── requirements.txt
-│   └── Dockerfile
-├── supabase/                   # SQL migrations & RLS policies
-└── .github/                    # CI pipelines
+│   ├── .env
+│   ├── app/
+│   │   ├── __init__.py
+│   │   ├── main.py
+│   │   ├── models.py
+│   │   ├── schemas.py
+│   │   ├── database.py
+│   │   ├── auth.py
+│   │   ├── routers/
+│   │   │   ├── visits.py
+│   │   │   ├── stats.py
+│   │   │   └── charts.py
+│   │   ├── tasks/
+│   │   │   ├── ai_tasks.py
+│   │   │   ├── stats.py
+│   │   │   └── email_alert.py
+│   │   └── utils/
+│   │       └── helpers.py
+│   ├── celery_worker.py
+│   └── tests/
+│       ├── test_visits.py
+│       └── test_ai_tasks.py
+
+├── .github/
+│   └── workflows/
+│       ├── backend_ci.yml
+│       └── mobile_ci.yml       # Codemagic/Bitrise trigger script
+
+├── supabase/                   # Configurations for Supabase
+│   ├── migrations/
+│   ├── policies.sql
+│   └── seed.sql
+
+└── docs/                       # Optional: design & specs
+    ├── architecture_diagram.png
+    └── ui_mockups/
+        ├── visit_form_wireframe.png
+        └── analytics_wireframe.png
+
 ```
 
 ---
