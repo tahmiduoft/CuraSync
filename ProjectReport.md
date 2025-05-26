@@ -16,7 +16,7 @@ Community-health workers (CHWs) in low-connectivity regions need to record patie
 | **Automated alerts**      | Nightly back-end analysis triggers z-score spike warnings and summary PDFs emailed to administrators.     |
 | **Security**              | SQLCipher, JWT auth, HTTPS/TLS 1.3, Supabase Row-Level Security.                                         |
 
-A future web dashboard can be added with minimal changes, but the MVP already offers full mobile functionality.
+A future web dashboard can be added with minimal changes, but the MVP will offer full mobile functionality.
 
 ---
 
