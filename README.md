@@ -10,7 +10,7 @@ A cross-platform (iOS & Android) **React Native** application that lets communit
 |----------------------|----------------------------------------------------------------------------------------------------------------|
 | **Offline workflow** | Encrypted SQLite queue stores visits, photos, and audio when no signal is available.                          |
 | **Background sync**  | react-native-background-fetch uploads queued items via presigned Supabase URLs once connectivity returns.    |
-| **AI advice**        | Pre-trained APIs (Infermedica, Google Vision, Google Speech-to-Text). *No model training required.*            |
+| **AI advice**        | Pre-trained APIs (Infermedica, Google Vision, Google Speech-to-Text).            |
 | **In-app analytics** | Descriptive stats, line-trend charts, heat-maps, and Prophet forecasts rendered with Victory Native + SVG.     |
 | **Automated alerts** | Nightly Pandas job detects z-score spikes and e-mails a PDF brief to supervisors.                              |
 | **Security**         | SQLCipher on device, JWT auth, HTTPS/TLS 1.3, Supabase Row-Level Security (RLS).                               |
