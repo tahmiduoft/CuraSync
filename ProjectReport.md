@@ -12,7 +12,7 @@ Community-health workers (CHWs) in low-connectivity regions need to record patie
 | **Offline capture**       | Visits—including symptoms, vitals, photos, audio—saved to an **encrypted SQLite queue** on the device.   |
 | **Background sync**       | Queue uploaded via **presigned Supabase URLs** when connectivity returns.                                |
 | **AI-assisted triage**    | Pre-trained APIs (Infermedica, Google Vision, Google Speech-to-Text) provide symptom advice.             |
-| **Interactive analytics** | CHWs & supervisors view **charts, heat-maps, and forecasts inside the app**—not just email reports.      |
+| **Interactive analytics** | CHWs & supervisors view **charts, heat-maps, and forecasts inside the app**.      |
 | **Automated alerts**      | Nightly back-end analysis triggers z-score spike warnings and summary PDFs emailed to administrators.     |
 | **Security**              | SQLCipher, JWT auth, HTTPS/TLS 1.3, Supabase Row-Level Security.                                         |
 
